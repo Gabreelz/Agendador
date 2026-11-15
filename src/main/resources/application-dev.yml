@@ -1,0 +1,14 @@
+# Desenvolvimento local: lê o arquivo .env (não versionado) da raiz do projeto,
+# então `./mvnw spring-boot:run` funciona sem exportar variáveis manualmente.
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  mail:
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+
+logging:
+  level:
+    com.example.scheduler: DEBUG
+    org.quartz: INFO

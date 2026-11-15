@@ -1,0 +1,32 @@
+# Infraestrutura local de desenvolvimento.
+# Credenciais vêm do arquivo .env (copie de .env.example). Nada é versionado.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: scheduler-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-scheduler}
+      POSTGRES_USER: ${DB_USER:?Defina DB_USER no .env (cp .env.example .env)}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD no .env (cp .env.example .env)}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: scheduler-mailhog
+    platform: linux/amd64   # imagem sem build arm64; roda via emulação em Apple Silicon
+    ports:
+      - "1025:1025"         # SMTP
+      - "8025:8025"         # Interface web: http://localhost:8025
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

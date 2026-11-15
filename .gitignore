@@ -1,0 +1,32 @@
+# Segredos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+application-local*.yml
+application-local*.properties
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+.sts4/
+*.swp
+
+# SO / logs
+.DS_Store
+Thumbs.db
+*.log
+logs/

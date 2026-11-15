@@ -1,0 +1,13 @@
+# Testes automatizados. O banco vem do Testcontainers (@ServiceConnection) e
+# as credenciais de segurança são geradas aleatoriamente no teste.
+spring:
+  quartz:
+    auto-startup: false     # jobs não disparam durante os testes
+  mail:
+    host: localhost
+    port: 1025
+
+logging:
+  level:
+    root: WARN
+    com.example.scheduler: INFO

@@ -1,0 +1,5 @@
+# <tipo>(<escopo opcional>): <descrição no imperativo, até 72 caracteres>
+#
+# Tipos: feat | fix | docs | style | refactor | perf | test | build | ci | chore | revert
+# Quebra de compatibilidade: adicione "!" após o tipo e "BREAKING CHANGE:" no rodapé.
+# Referencie issues no rodapé: Refs #123
