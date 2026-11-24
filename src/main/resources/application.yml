@@ -26,12 +26,21 @@ spring:
   quartz:
     job-store-type: jdbc
     jdbc:
-      initialize-schema: never   # tabelas criadas pela migration V1
+      initialize-schema: never           # as tabelas QRTZ_* vêm da migration V2 (Flyway)
     scheduler-name: ${spring.application.name}
+    overwrite-existing-jobs: false
+    wait-for-jobs-to-complete-on-shutdown: true
     properties:
+      # --- Cluster: todas as instâncias apontam para o MESMO banco e as MESMAS tabelas ---
+      org.quartz.scheduler.instanceId: AUTO            # id único por instância (host + timestamp)
+      org.quartz.jobStore.isClustered: true
+      org.quartz.jobStore.clusterCheckinInterval: 7500 # ms entre "estou vivo" de cada nó
+      # --- Persistência ---
       org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-      org.quartz.jobStore.isClustered: false
-      org.quartz.threadPool.threadCount: 5
+      # --- Misfire: tolerância (ms) antes de considerar um disparo "perdido" ---
+      org.quartz.jobStore.misfireThreshold: ${QUARTZ_MISFIRE_THRESHOLD_MS:60000}
+      # --- Pool de threads que executam os jobs ---
+      org.quartz.threadPool.threadCount: ${QUARTZ_THREADS:5}
 
   mail:
     host: ${MAIL_HOST:localhost}
@@ -52,3 +61,14 @@ app:
     admin:
       username: ${APP_ADMIN_USER}
       password: ${APP_ADMIN_PASSWORD}
+
+server:
+  error:                    # fallback do Boot (/error): nunca expor detalhes internos
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
+
+logging:
+  pattern:
+    level: "%5p [traceId=%X{traceId:-}]"
